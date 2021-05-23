@@ -1,0 +1,116 @@
+* {
+  padding: 0;
+  margin: 0;
+}
+
+/* Control Panel */
+
+.control-panel {
+  /* background-color: red; */
+  /* max-height: 130px; */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.panel-hrd {
+  text-align: center;
+  margin: 20px auto 10px auto;
+  font-size: 1.5em;
+  font-weight: 400;
+  color: rgb(45, 45, 160);
+}
+
+.ctrl-btns {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.ctrl-btns-up {
+  display: flex;
+  justify-content: center;
+}
+
+.ctrl-btns-down {
+  /* background-color: red; */
+  width: 100%;
+  text-align: center;
+}
+
+.ctrl-btns-down input {
+  width: 80%;
+}
+
+.ctrl-btn {
+  background-color: rgb(39, 39, 170);
+  color: white;
+  max-width: 120px;
+  margin: 3px;
+  /* border-radius: 6px; */
+  text-align: center;
+  font-size: 0.85em;
+  cursor: pointer;
+  padding: 6px 12px;
+  box-shadow: 0;
+  border: 0;
+}
+
+.panel-body {
+  /* background-color: yellow; */
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: space-around;
+  align-items: center;
+  width: 50%;
+  /* padding: auto 50% auto 50%; */
+}
+
+/* Game body */
+
+.game-body {
+  /* background-color: yellow; */
+  height: calc(100vh - 130px);
+}
+
+.grids-container {
+  /* background-color: rgba(255, 99, 71, 0.527); */
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.grids-row {
+  /* background-color: rgba(71, 151, 255, 0.845); */
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  width: 95%;
+}
+
+.grid {
+  background-color: rgb(15, 20, 73);
+  height: 15px;
+  width: 15px;
+  /* margin: 1px; */
+  cursor: pointer;
+  box-shadow: 0 0px 10px -5px rgba(0, 0, 0, 0.3);
+  border-radius: 0;
+  border: 0.5px solid rgb(0, 255, 106);
+}
+
+.grid:active {
+  background-color: red;
+}
+
+.grid:hover {
+  background-color: rgba(255, 0, 0, 0.75);
+}
+
+.activated {
+  background-color: rgb(20, 180, 150);
+}

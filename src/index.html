@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+
+    <link rel="stylesheet" href="./style.css" />
+    <script defer src="./script.js"></script>
+  </head>
+  <body>
+    <div class="control-panel">
+      <div class="panel-hrd">Game of Life</div>
+
+      <div class="panel-body">
+        <div class="ctrl-btns">
+          <div class="ctrl-btns-up">
+            <button class="start ctrl-btn" onClick="startGame()">
+              <span>Start</span>
+            </button>
+            <button class="restart ctrl-btn">
+              <span>Restart</span>
+            </button>
+            <button class="updatePause ctrl-btn" onClick="updatePause()">
+              <span>Pause</span>
+            </button>
+          </div>
+
+          <div class="ctrl-btns-down">
+            <input
+              type="range"
+              name="interval-range"
+              id="interval-range"
+              min="10"
+              max="2000"
+              step="10"
+              onchange="updateInterval(value)"
+            />
+          </div>
+        </div>
+
+        <!-- Counter -->
+        <div class="panel-counter">
+          <div class="stepd-counter">
+            Steps: <span id="counter" class="counter">00</span>
+          </div>
+          <div class="steps-interval">
+            Steps Interval:
+            <span id="steps-interval" class="steps-interval">250</span>ms
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="game-body">
+      <div class="grids-container">
+        <!-- <div class="grids-row">
+          <div class="grid" id="0-0" onclick="selectGrid"></div>
+        </div> -->
+      </div>
+    </div>
+  </body>
+</html>
