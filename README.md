@@ -41,7 +41,7 @@ The **Game of Life** or simply **Life**, is a cellulat automation devised by the
 ## References
 
 - Wikipedia | [Conway's Game of Life](https://en.wikipedia.org/wiki/Conway%27s_Game_of_Life)
-- YouTube | [njds sdf]()
+- YouTube | [There's a Hole at the Bottom of Math](https://youtu.be/HeQX2HjkcNo?t=65)
 
 ## Licence
 
