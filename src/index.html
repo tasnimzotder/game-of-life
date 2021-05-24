@@ -19,7 +19,7 @@
             <button class="start ctrl-btn" onClick="handleGame('start')">
               <span>Start</span>
             </button>
-            <button class="restart ctrl-btn">
+            <button class="restart ctrl-btn" onClick="handleGame('reset')">
               <span>Restart</span>
             </button>
             <button
@@ -57,11 +57,7 @@
       </div>
     </div>
     <div class="game-body">
-      <div class="grids-container">
-        <!-- <div class="grids-row">
-          <div class="grid" id="0-0" onclick="selectGrid"></div>
-        </div> -->
-      </div>
+      <div class="grids-container"></div>
     </div>
   </body>
 </html>

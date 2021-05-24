@@ -7,7 +7,7 @@ const play_pause = document.getElementById('play-pause');
 
 // global variables
 let active_cells = [];
-let game_interval_time = 250; // in milliseconds
+let game_interval_time = +250; // in milliseconds
 
 // grid height(y) & width(x)
 let grid_x = 256 / 2;
@@ -133,6 +133,7 @@ class Game extends Grid {
   constructor() {
     super();
     this.gamePlayVar = null;
+    this.game_status = false;
   }
 
   // game logics
@@ -166,9 +167,6 @@ class Game extends Grid {
       });
     }
 
-    step_count += 1;
-    updateCounter();
-
     currPassiveGrids.forEach((grid_p) => {
       super.removeCell(grid_p);
     });
@@ -177,17 +175,28 @@ class Game extends Grid {
       super.addCell(grid_a);
     });
 
-    if (
-      arrayMatch(active_cells, currActiveGrids) &&
-      currPassiveGrids.length == 0
-    ) {
-      clearInterval(this.gamePlayVar);
+    if (currPassiveGrids.length == 0) {
+      if (
+        arrayMatch(active_cells, currActiveGrids) ||
+        active_cells.length == 0
+      ) {
+        clearInterval(this.gamePlayVar);
+
+        this.game_status = false;
+      }
+    }
+
+    if (this.game_status) {
+      step_count += 1;
+      updateCounter();
     }
   }
 
   // start/play the game
   start() {
     clearInterval(this.gamePlayVar);
+    this.game_status = true;
+
     this.gamePlayVar = setInterval(() => {
       this.gamePlay();
     }, game_interval_time);
@@ -196,11 +205,20 @@ class Game extends Grid {
   // pause the game
   pause() {
     clearInterval(this.gamePlayVar);
+    this.game_status = false;
   }
 
   // reset the game
   reset() {
     clearInterval(this.gamePlayVar);
+
+    step_count = 0;
+    this.game_status = false;
+    updateInterval(+250);
+
+    active_cells.map((cell) => {
+      super.removeCell(cell);
+    });
   }
 }
 
@@ -217,6 +235,14 @@ const updateCounter = () => {
 const updateInterval = (value) => {
   game_interval_time = value;
   steps_interval.innerHTML = game_interval_time;
+
+  if (game.game_status) {
+    game.pause();
+    game.start();
+  }
+
+  let interval_range = document.getElementById('interval-range');
+  interval_range.value = game_interval_time;
 };
 
 const arrayMatch = (arr1, arr2) => {
@@ -250,5 +276,7 @@ const handleGame = (ctrl) => {
 
       game.pause();
     }
+  } else if (ctrl == 'reset') {
+    game.reset();
   }
 };
