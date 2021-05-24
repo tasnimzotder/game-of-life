@@ -4,6 +4,13 @@
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="It's a zero-player game (2D), means its evolution in determined by its initial state."
+    />
+    <meta name="keywords" content="game, game of life">
+    <meta name="author" content="Tasnim Zotder">
+
     <title>Document</title>
 
     <link rel="stylesheet" href="./style.css" />
@@ -11,7 +18,7 @@
   </head>
   <body>
     <div class="control-panel">
-      <div class="panel-hrd">Game of Life</div>
+      <div class="panel-hrd">Conway's Game of Life</div>
 
       <div class="panel-body">
         <div class="ctrl-btns">
@@ -46,10 +53,10 @@
 
         <!-- Counter -->
         <div class="panel-counter">
-          <div class="stepd-counter">
+          <div class="step-counter">
             Steps: <span id="counter" class="counter">00</span>
           </div>
-          <div class="steps-interval">
+          <div class="steps-interval-div">
             Steps Interval:
             <span id="steps-interval" class="steps-interval">250</span>ms
           </div>
@@ -58,6 +65,15 @@
     </div>
     <div class="game-body">
       <div class="grids-container"></div>
+    </div>
+
+    <div class="gh-icon">
+      <a href="https://github.com/tasnimzotder/" target="_blank"
+        ><img
+          alt="GitHub Icon"
+          src="https://img.icons8.com/fluent/48/000000/github.png"
+        />
+      </a>
     </div>
   </body>
 </html>

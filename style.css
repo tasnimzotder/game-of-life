@@ -3,7 +3,10 @@
   margin: 0;
 }
 
-/* Control Panel */
+body {
+  height: 100vh;
+  overflow: hidden;
+}
 
 .control-panel {
   /* background-color: red; */
@@ -11,17 +14,20 @@
   display: flex;
   flex-direction: column;
   align-items: center;
+  margin-bottom: 2.5%;
 }
 
 .panel-hrd {
   text-align: center;
-  margin: 20px auto 10px auto;
-  font-size: 1.5em;
+  margin: 30px auto 20px auto;
+  font-size: 1.6em;
   font-weight: 400;
   color: rgb(45, 45, 160);
+  border-bottom: 2px solid rgb(134, 134, 134);
 }
 
 .ctrl-btns {
+  /* background-color: red; */
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -37,6 +43,7 @@
   /* background-color: red; */
   width: 100%;
   text-align: center;
+  /* margin-bottom: 10px; */
 }
 
 .ctrl-btns-down input {
@@ -44,45 +51,57 @@
 }
 
 .ctrl-btn {
-  background-color: rgb(39, 39, 170);
+  background-color: rgb(5, 152, 98);
   color: white;
   max-width: 120px;
   margin: 3px;
-  /* border-radius: 6px; */
+  margin-bottom: 15px;
+  border-radius: 4px;
   text-align: center;
-  font-size: 0.85em;
+  font-size: 1em;
   cursor: pointer;
-  padding: 6px 12px;
+  padding: 7px 14px;
   box-shadow: 0;
   border: 0;
 }
 
 .panel-body {
-  /* background-color: yellow; */
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
-  justify-content: space-around;
-  align-items: center;
+  justify-content: center;
+  align-items: start;
   width: 50%;
-  /* padding: auto 50% auto 50%; */
+}
+
+.panel-counter {
+  color: rgb(45, 45, 160);
+  margin: 10px auto;
+  font-size: 1.2em;
+}
+
+.panel-counter .counter,
+.panel-counter .steps-interval {
+  color: teal;
 }
 
 /* Game body */
 
 .game-body {
-  /* background-color: yellow; */
-  max-height: calc(100vh - 130px);
   overflow: hidden;
-}
-
-.grids-container {
-  /* background-color: rgba(255, 99, 71, 0.527); */
+  height: calc(100vh - 260px);
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
+}
+
+.grids-container {
   margin-top: -25%;
+  /* background-color: red; */
+  /* border: 10px solid rgb(188, 189, 189); */
+  box-shadow: 0 0 100px 0px teal;
+  width: 70%;
 }
 
 .grids-row {
@@ -91,19 +110,20 @@
   flex-direction: row;
   justify-content: center;
   align-items: center;
-  width: 95%;
+  /* width: 70%; */
   overflow: hidden;
 }
 
 .grid {
-  background-color: rgb(15, 20, 73);
+  /* background-color: rgb(15, 20, 73); */
+  background-color: teal;
   height: 15px;
   min-width: 15px;
   /* margin: 1px; */
   cursor: pointer;
   box-shadow: 0 0px 10px -5px rgba(0, 0, 0, 0.3);
   border-radius: 0;
-  border: 0.5px solid rgb(0, 255, 106);
+  border: 0.5px solid rgb(174, 209, 209);
 }
 
 .grid:active {
@@ -111,9 +131,23 @@
 }
 
 .grid:hover {
-  background-color: rgba(255, 0, 0, 0.75);
+  background-color: rgba(66, 27, 27, 0.75);
 }
 
 .activated {
-  background-color: rgb(20, 180, 150);
+  background-color: rgb(192, 0, 35);
+}
+
+/* github icon */
+
+.gh-icon {
+  position: absolute;
+  bottom: 2%;
+  right: 3.3%;
+}
+
+@media only screen and (max-width: 600px) {
+  .grids-row {
+    width: 90%;
+  }
 }

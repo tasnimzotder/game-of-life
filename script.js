@@ -138,7 +138,7 @@ class Game extends Grid {
 
   // game logics
   gamePlay() {
-    let currActiveGrids = [];
+    let currActiveCells = [];
     let currPassiveGrids = [];
 
     for (let idx = 0; idx < active_cells.length; idx++) {
@@ -151,7 +151,7 @@ class Game extends Grid {
       } else if ([2, 3].includes(super.neighbourActiveCells(grid).length)) {
         // 2. Any live grid cell w/ 2 or 3 live neighbours lives
 
-        currActiveGrids.push(grid);
+        currActiveCells.push(grid);
       } else if (super.neighbourActiveCells(grid).length > 3) {
         // 3. Any live grid cell w/ more than 3 live neighbours dies
 
@@ -162,7 +162,7 @@ class Game extends Grid {
         // 4. Any dead grid cell w/ exactly 3 live neighbours becomes live
 
         if (super.neighbourActiveCells(grid_p).length == 3) {
-          currActiveGrids.push(grid_p);
+          currActiveCells.push(grid_p);
         }
       });
     }
@@ -171,13 +171,13 @@ class Game extends Grid {
       super.removeCell(grid_p);
     });
 
-    currActiveGrids.forEach((grid_a) => {
+    currActiveCells.forEach((grid_a) => {
       super.addCell(grid_a);
     });
 
     if (currPassiveGrids.length == 0) {
       if (
-        arrayMatch(active_cells, currActiveGrids) ||
+        arrayMatch(active_cells, currActiveCells) ||
         active_cells.length == 0
       ) {
         clearInterval(this.gamePlayVar);
@@ -214,7 +214,9 @@ class Game extends Grid {
 
     step_count = 0;
     this.game_status = false;
+
     updateInterval(+250);
+    updateCounter();
 
     active_cells.map((cell) => {
       super.removeCell(cell);
