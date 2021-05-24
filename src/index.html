@@ -16,14 +16,18 @@
       <div class="panel-body">
         <div class="ctrl-btns">
           <div class="ctrl-btns-up">
-            <button class="start ctrl-btn" onClick="startGame()">
+            <button class="start ctrl-btn" onClick="handleGame('start')">
               <span>Start</span>
             </button>
             <button class="restart ctrl-btn">
               <span>Restart</span>
             </button>
-            <button class="updatePause ctrl-btn" onClick="updatePause()">
-              <span>Pause</span>
+            <button
+              class="updatePause ctrl-btn"
+              id="play-pause"
+              onClick="handleGame('play-pause')"
+            >
+              Pause
             </button>
           </div>
 

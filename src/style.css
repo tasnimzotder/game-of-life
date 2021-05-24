@@ -72,7 +72,8 @@
 
 .game-body {
   /* background-color: yellow; */
-  height: calc(100vh - 130px);
+  max-height: calc(100vh - 130px);
+  overflow: hidden;
 }
 
 .grids-container {
@@ -81,6 +82,7 @@
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  margin-top: -25%;
 }
 
 .grids-row {
@@ -90,12 +92,13 @@
   justify-content: center;
   align-items: center;
   width: 95%;
+  overflow: hidden;
 }
 
 .grid {
   background-color: rgb(15, 20, 73);
   height: 15px;
-  width: 15px;
+  min-width: 15px;
   /* margin: 1px; */
   cursor: pointer;
   box-shadow: 0 0px 10px -5px rgba(0, 0, 0, 0.3);

@@ -1,18 +1,23 @@
-const grids_container = document.querySelector('.grids-container');
-const grids_row = document.querySelectorAll('.grids-row');
-const grids = document.querySelectorAll('.grid');
+const grid_container = document.querySelector('.grids-container');
+const grid_row = document.querySelectorAll('.grids-row');
+const cells = document.querySelectorAll('.grid');
 const counter = document.getElementById('counter');
 const steps_interval = document.getElementById('steps-interval');
+const play_pause = document.getElementById('play-pause');
 
-let active_grids = [];
-let game_interval_time = 1000; // in millisecs
+// global variables
+let active_cells = [];
+let game_interval_time = 250; // in milliseconds
+
+// grid height(y) & width(x)
+let grid_x = 256 / 2;
+let grid_y = 256 / 2;
+
+// game status
+let isPaused = false;
 let step_count = 0;
 
-const grids_x = 30;
-const grids_y = 40;
-
-let isPaused = true;
-
+// neighbour cells coordinates
 const coordinate_coeff = [
   [0, 1], //top
   [1, 1], //top-right
@@ -24,55 +29,184 @@ const coordinate_coeff = [
   [-1, 1], //top-left
 ];
 
-for (let rw = 0; rw < grids_x; rw++) {
-  let row_elm = document.createElement('div');
-  row_elm.classList.add('grids-row');
-
-  for (let cl = 0; cl < grids_y; cl++) {
-    let grid_elm = document.createElement('div');
-    grid_elm.classList.add('grid');
-    grid_elm.id = `${rw}-${cl}`;
-    // grid_elm.innerHTML = `${rw}-${cl}`;
-    grid_elm.setAttribute('onclick', 'selectGrid(event)');
-    row_elm.appendChild(grid_elm);
+class Grid {
+  constructor() {
+    this.generateGridCells(grid_x, grid_y);
   }
 
-  grids_container.appendChild(row_elm);
-}
+  // generate the grid cells
+  generateGridCells(height, width) {
+    for (let rw = 0; rw < width; rw++) {
+      let row_elm = document.createElement('div');
+      row_elm.classList.add('grids-row');
 
-const selectGrid = (event) => {
-  let grid_id = event.target.id;
-  addGrid(grid_id.toString());
+      for (let cl = 0; cl < height; cl++) {
+        let grid_elm = document.createElement('div');
+        grid_elm.classList.add('grid');
+        grid_elm.id = `${rw}-${cl}`;
+        // grid_elm.innerHTML = `${rw}-${cl}`;
+        grid_elm.setAttribute('onclick', 'selectCell(event)');
+        row_elm.appendChild(grid_elm);
+      }
 
-  console.log(event.target.id);
-};
-
-const addGrid = (grid) => {
-  let grid_ele = document.getElementById(grid);
-
-  let coordinates = grid.split('-');
-  let x = +coordinates[0];
-  let y = +coordinates[1];
-
-  if (!(x < 0 || y < 0)) {
-    if (!active_grids.includes(grid)) {
-      active_grids.push(grid);
-      grid_ele.classList.add('activated');
+      grid_container.appendChild(row_elm);
     }
   }
-};
 
-const removeGrid = (grid) => {
-  active_grids = active_grids.filter((ele) => {
-    return ele != grid;
-  });
+  addCell(cell_id) {
+    let cell = document.getElementById(cell_id);
 
-  let grid_ele = document.getElementById(grid);
-  grid_ele.classList.remove('activated');
-};
+    let coordinates = cell_id.split('-');
+    let x = +coordinates[0];
+    let y = +coordinates[1];
 
-const showActiveGrids = () => {
-  console.log(active_grids);
+    if (!(x < 0 || y < 0)) {
+      if (!active_cells.includes(cell_id)) {
+        active_cells.push(cell_id);
+        cell.classList.add('activated');
+      }
+    }
+  }
+
+  removeCell(cell_id) {
+    active_cells = active_cells.filter((ele) => {
+      return ele !== cell_id;
+    });
+
+    let cell = document.getElementById(cell_id);
+    cell.classList.remove('activated');
+  }
+
+  neighbourCells(cell_id) {
+    let coordinates = cell_id.split('-');
+    let x = +coordinates[0];
+    let y = +coordinates[1];
+
+    let neighbour_cells = [];
+
+    for (let idx = 0; idx < coordinate_coeff.length; idx++) {
+      const elem = coordinate_coeff[idx];
+
+      let x0 = x + elem[0];
+      let y0 = y + elem[1];
+
+      if (x0 < 0 || y0 < 0) {
+        continue;
+      }
+
+      let grid_coord = String(`${x0}-${y0}`);
+
+      neighbour_cells.push(grid_coord);
+    }
+
+    return neighbour_cells;
+  }
+
+  neighbourActiveCells(cell_id) {
+    let neighbour_cells = this.neighbourCells(cell_id);
+    let neighbour_active_cells = [];
+
+    neighbour_cells.forEach((cell) => {
+      if (active_cells.includes(cell)) {
+        neighbour_active_cells.push(cell);
+      }
+    });
+
+    return neighbour_active_cells;
+  }
+
+  neighbourPassiveCells(cell_id) {
+    let neighbour_cells = this.neighbourCells(cell_id);
+    let neighbour_passive_cells = [];
+
+    neighbour_cells.forEach((cell) => {
+      if (!active_cells.includes(cell)) {
+        neighbour_passive_cells.push(cell);
+      }
+    });
+
+    return neighbour_passive_cells;
+  }
+}
+
+class Game extends Grid {
+  constructor() {
+    super();
+    this.gamePlayVar = null;
+  }
+
+  // game logics
+  gamePlay() {
+    let currActiveGrids = [];
+    let currPassiveGrids = [];
+
+    for (let idx = 0; idx < active_cells.length; idx++) {
+      const grid = active_cells[idx];
+
+      if (super.neighbourActiveCells(grid).length < 2) {
+        // 1. Any live grid cell w/ less than 2 live neighbours dies
+
+        currPassiveGrids.push(grid);
+      } else if ([2, 3].includes(super.neighbourActiveCells(grid).length)) {
+        // 2. Any live grid cell w/ 2 or 3 live neighbours lives
+
+        currActiveGrids.push(grid);
+      } else if (super.neighbourActiveCells(grid).length > 3) {
+        // 3. Any live grid cell w/ more than 3 live neighbours dies
+
+        currPassiveGrids.push(grid);
+      }
+
+      super.neighbourPassiveCells(grid).forEach((grid_p) => {
+        // 4. Any dead grid cell w/ exactly 3 live neighbours becomes live
+
+        if (super.neighbourActiveCells(grid_p).length == 3) {
+          currActiveGrids.push(grid_p);
+        }
+      });
+    }
+
+    step_count += 1;
+    updateCounter();
+
+    currPassiveGrids.forEach((grid_p) => {
+      super.removeCell(grid_p);
+    });
+
+    currActiveGrids.forEach((grid_a) => {
+      super.addCell(grid_a);
+    });
+
+    if (
+      arrayMatch(active_cells, currActiveGrids) &&
+      currPassiveGrids.length == 0
+    ) {
+      clearInterval(this.gamePlayVar);
+    }
+  }
+
+  // start/play the game
+  start() {
+    clearInterval(this.gamePlayVar);
+    this.gamePlayVar = setInterval(() => {
+      this.gamePlay();
+    }, game_interval_time);
+  }
+
+  // pause the game
+  pause() {
+    clearInterval(this.gamePlayVar);
+  }
+
+  // reset the game
+  reset() {
+    clearInterval(this.gamePlayVar);
+  }
+}
+
+const selectCell = (event) => {
+  const cell_id = event.target.id;
+  game.addCell(cell_id);
 };
 
 const updateCounter = () => {
@@ -85,103 +219,36 @@ const updateInterval = (value) => {
   steps_interval.innerHTML = game_interval_time;
 };
 
-function updatePause() {
-  isPaused = true;
-}
+const arrayMatch = (arr1, arr2) => {
+  if (arr1.length !== arr2.length) return false;
 
-const neighbourGrids = (grid) => {
-  let coordinates = grid.split('-');
-  let x = +coordinates[0];
-  let y = +coordinates[1];
-
-  let neighbour_grids = [];
-
-  for (let idx = 0; idx < coordinate_coeff.length; idx++) {
-    const elem = coordinate_coeff[idx];
-
-    let x0 = x + elem[0];
-    let y0 = y + elem[1];
-
-    if (x0 < 0 || y0 < 0) {
-      continue;
+  for (let idx = 0; idx < arr1.length; idx++) {
+    if (arr1[idx] !== arr2[idx]) {
+      return false;
+    } else {
+      return true;
     }
-
-    let grid_coord = String(`${x0}-${y0}`);
-
-    neighbour_grids.push(grid_coord);
   }
-
-  return neighbour_grids;
 };
 
-const neighbourActiveGrids = (grid) => {
-  let neighbour_grids = neighbourGrids(grid);
-  let neighbour_active_grids = [];
+// initiate the game
+let game = new Game();
+// let grid = new Grid();
 
-  neighbour_grids.forEach((elem) => {
-    if (active_grids.includes(elem)) {
-      neighbour_active_grids.push(elem);
-    }
-  });
-
-  return neighbour_active_grids;
-};
-
-const neighbourPassiveGrids = (grid) => {
-  let neighbour_grids = neighbourGrids(grid);
-  let neighbour_passive_grids = [];
-
-  neighbour_grids.forEach((elem) => {
-    if (!active_grids.includes(elem)) {
-      neighbour_passive_grids.push(elem);
-    }
-  });
-
-  return neighbour_passive_grids;
-};
-
-const startGame = () => {
-  isPaused = false;
-
-  let gamePlayWInterval = setInterval(() => {
-    gamePlay();
-  }, game_interval_time);
-
-  const gamePlay = () => {
+const handleGame = (ctrl) => {
+  if (ctrl == 'start') {
+    game.start();
+  } else if (ctrl == 'play-pause') {
     if (isPaused) {
-      clearInterval(gamePlayWInterval);
+      isPaused = false;
+      play_pause.innerHTML = 'Pause';
+
+      game.start();
+    } else {
+      isPaused = true;
+      play_pause.innerHTML = 'Play';
+
+      game.pause();
     }
-
-    for (let idx = 0; idx < active_grids.length; idx++) {
-      const grid = active_grids[idx];
-
-      const neighbour_active_grids = neighbourActiveGrids(grid);
-      const neighbour_passive_grids = neighbourPassiveGrids(grid);
-
-      // dead grids
-      for (let idx = 0; idx < neighbour_passive_grids.length; idx++) {
-        const gridx = neighbour_passive_grids[idx];
-
-        if (neighbourActiveGrids(gridx).length == 3) {
-          addGrid(gridx);
-          break;
-        }
-      }
-
-      // live grids
-      if (neighbour_active_grids.length < 2) {
-        removeGrid(grid);
-        // continue;
-      } else if ([2, 3].includes(neighbour_active_grids.length)) {
-        // continue;
-        null;
-      } else if (neighbour_active_grids.length > 3) {
-        removeGrid(grid);
-        // continue;
-      }
-    }
-
-    step_count += 1;
-    updateCounter();
-  };
+  }
 };
