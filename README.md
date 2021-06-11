@@ -4,9 +4,13 @@ It's a zero-player game (2D), means its evolution in determined by its initial s
 
 > Note: Although the original algorithm (game) is on an infinite 2-D plane, for simplicity, in this project, the size of the grid(plane) is finite.
 
+## Play on the Browser
+
+Play __Game of Life__ on the browser 👉 [replit](https://replit.com/github/tasnimzotder/game-of-life)
+
 ## About
 
-The **Game of Life** or simply **Life**, is a cellulat automation devised by the British mathematician **John Horton Convoy**.
+The **Game of Life** or simply **Life**, is a cellulat automation devised by the British mathematician **John Horton Conway**.
 
 ## Rules
 
