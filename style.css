@@ -88,20 +88,27 @@ body {
 /* Game body */
 
 .game-body {
-  overflow: hidden;
+  /* overflow: scroll;
   height: calc(100vh - 260px);
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
+/* overflow: scroll; */
+
+  overflow: hidden;
+  width: 100%;
 }
 
 .grids-container {
-  margin-top: -25%;
+  /* margin-top: -25%; */
   /* background-color: red; */
+  height: calc(100vh - 260px);
   /* border: 10px solid rgb(188, 189, 189); */
   box-shadow: 0 0 100px 0px teal;
-  width: 70%;
+  width: 90%;
+    overflow: scroll;
+    margin: auto;
 }
 
 .grids-row {

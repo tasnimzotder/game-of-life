@@ -4,20 +4,21 @@ const cells = document.querySelectorAll('.grid');
 const counter = document.getElementById('counter');
 const steps_interval = document.getElementById('steps-interval');
 const play_pause = document.getElementById('play-pause');
+const active_cells_counter = document.getElementById('active-cells');
 
 // global variables
 let active_cells = [];
 let game_interval_time = +250; // in milliseconds
 
 // grid height(y) & width(x)
-let grid_x = 256 / 2;
-let grid_y = 256 / 2;
+let grid_x = 128;
+let grid_y = 128;
 
 // game status
 let isPaused = false;
 let step_count = 0;
 
-// neighbour cells coordinates
+// neighbor cells coordinates
 const coordinate_coeff = [
   [0, 1], //top
   [1, 1], //top-right
@@ -28,6 +29,11 @@ const coordinate_coeff = [
   [-1, 0], //left
   [-1, 1], //top-left
 ];
+
+function updateActiveCells() {
+  let count = active_cells.length;
+  active_cells_counter.innerHTML = `${count}`;
+}
 
 class Grid {
   constructor() {
@@ -77,12 +83,12 @@ class Grid {
     cell.classList.remove('activated');
   }
 
-  neighbourCells(cell_id) {
+  neighborCells(cell_id) {
     let coordinates = cell_id.split('-');
     let x = +coordinates[0];
     let y = +coordinates[1];
 
-    let neighbour_cells = [];
+    let neighbor_cells = [];
 
     for (let idx = 0; idx < coordinate_coeff.length; idx++) {
       const elem = coordinate_coeff[idx];
@@ -96,38 +102,40 @@ class Grid {
 
       let grid_coord = String(`${x0}-${y0}`);
 
-      neighbour_cells.push(grid_coord);
+      neighbor_cells.push(grid_coord);
     }
 
-    return neighbour_cells;
+    return neighbor_cells;
   }
 
-  neighbourActiveCells(cell_id) {
-    let neighbour_cells = this.neighbourCells(cell_id);
-    let neighbour_active_cells = [];
+  neighborActiveCells(cell_id) {
+    let neighbor_cells = this.neighborCells(cell_id);
+    let neighbor_active_cells = [];
 
-    neighbour_cells.forEach((cell) => {
+    neighbor_cells.forEach((cell) => {
       if (active_cells.includes(cell)) {
-        neighbour_active_cells.push(cell);
+        neighbor_active_cells.push(cell);
       }
     });
 
-    return neighbour_active_cells;
+    return neighbor_active_cells;
   }
 
-  neighbourPassiveCells(cell_id) {
-    let neighbour_cells = this.neighbourCells(cell_id);
-    let neighbour_passive_cells = [];
+  neighborPassiveCells(cell_id) {
+    let neighbor_cells = this.neighborCells(cell_id);
+    let neighbor_passive_cells = [];
 
-    neighbour_cells.forEach((cell) => {
+    neighbor_cells.forEach((cell) => {
       if (!active_cells.includes(cell)) {
-        neighbour_passive_cells.push(cell);
+        neighbor_passive_cells.push(cell);
       }
     });
 
-    return neighbour_passive_cells;
+    return neighbor_passive_cells;
   }
 }
+
+
 
 class Game extends Grid {
   constructor() {
@@ -144,24 +152,24 @@ class Game extends Grid {
     for (let idx = 0; idx < active_cells.length; idx++) {
       const grid = active_cells[idx];
 
-      if (super.neighbourActiveCells(grid).length < 2) {
-        // 1. Any live grid cell w/ less than 2 live neighbours dies
+      if (super.neighborActiveCells(grid).length < 2) {
+        // 1. Any live grid cell w/ less than 2 live neighbors dies
 
         currPassiveGrids.push(grid);
-      } else if ([2, 3].includes(super.neighbourActiveCells(grid).length)) {
-        // 2. Any live grid cell w/ 2 or 3 live neighbours lives
+      } else if ([2, 3].includes(super.neighborActiveCells(grid).length)) {
+        // 2. Any live grid cell w/ 2 or 3 live neighbors lives
 
         currActiveCells.push(grid);
-      } else if (super.neighbourActiveCells(grid).length > 3) {
-        // 3. Any live grid cell w/ more than 3 live neighbours dies
+      } else if (super.neighborActiveCells(grid).length > 3) {
+        // 3. Any live grid cell w/ more than 3 live neighbors dies
 
         currPassiveGrids.push(grid);
       }
 
-      super.neighbourPassiveCells(grid).forEach((grid_p) => {
-        // 4. Any dead grid cell w/ exactly 3 live neighbours becomes live
+      super.neighborPassiveCells(grid).forEach((grid_p) => {
+        // 4. Any dead grid cell w/ exactly 3 live neighbors becomes live
 
-        if (super.neighbourActiveCells(grid_p).length == 3) {
+        if (super.neighborActiveCells(grid_p).length == 3) {
           currActiveCells.push(grid_p);
         }
       });
@@ -190,6 +198,7 @@ class Game extends Grid {
       step_count += 1;
       updateCounter();
     }
+    updateActiveCells();
   }
 
   // start/play the game
